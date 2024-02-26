@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/qdm12/gluetun/internal/socks5"
 	"net/http"
 	"os"
 	"os/signal"
@@ -447,10 +448,13 @@ func _main(ctx context.Context, buildInfo models.BuildInformation,
 	go httpProxyLooper.Run(httpProxyCtx, httpProxyDone)
 	otherGroupHandler.Add(httpProxyHandler)
 
-	shadowsocksLooper := shadowsocks.NewLoop(allSettings.Shadowsocks,
-		logger.New(log.SetComponent("shadowsocks")))
-	shadowsocksHandler, shadowsocksCtx, shadowsocksDone := goshutdown.NewGoRoutineHandler(
-		"shadowsocks proxy", goroutine.OptionTimeout(defaultShutdownTimeout))
+	socks5Looper := socks5.NewLoop(allSettings.Socks5, logger.New(log.SetComponent("socks5")))
+	socks5Handler, socks5Ctx, socks5Done := goshutdown.NewGoRoutineHandler("socks5 proxy", goroutine.OptionTimeout(defaultShutdownTimeout))
+	go socks5Looper.Run(socks5Ctx, socks5Done)
+	otherGroupHandler.Add(socks5Handler)
+
+	shadowsocksLooper := shadowsocks.NewLoop(allSettings.Shadowsocks, logger.New(log.SetComponent("shadowsocks")))
+	shadowsocksHandler, shadowsocksCtx, shadowsocksDone := goshutdown.NewGoRoutineHandler("shadowsocks proxy", goroutine.OptionTimeout(defaultShutdownTimeout))
 	go shadowsocksLooper.Run(shadowsocksCtx, shadowsocksDone)
 	otherGroupHandler.Add(shadowsocksHandler)
 

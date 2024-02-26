@@ -84,6 +84,11 @@ func (s *Source) Read() (settings settings.Settings, err error) {
 		return settings, err
 	}
 
+	settings.Socks5, err = s.readSocks5()
+	if err != nil {
+		return settings, err
+	}
+
 	settings.DNS, err = s.readDNS()
 	if err != nil {
 		return settings, err

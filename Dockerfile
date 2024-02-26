@@ -180,6 +180,10 @@ ENV VPN_SERVICE_PROVIDER=pia \
     SHADOWSOCKS_PASSWORD= \
     SHADOWSOCKS_PASSWORD_SECRETFILE=/run/secrets/shadowsocks_password \
     SHADOWSOCKS_CIPHER=chacha20-ietf-poly1305 \
+    # Socks5
+    SOCKS5=off \
+    SOCKS5_LISTENING_ADDRESS=":1080" \
+    SOCKS5_PASSWORD= \
     # Control server
     HTTP_CONTROL_SERVER_LOG=on \
     HTTP_CONTROL_SERVER_ADDRESS=":8000" \

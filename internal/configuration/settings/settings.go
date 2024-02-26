@@ -20,6 +20,7 @@ type Settings struct {
 	Log           Log
 	PublicIP      PublicIP
 	Shadowsocks   Shadowsocks
+	Socks5        Socks5
 	System        System
 	Updater       Updater
 	Version       Version
@@ -44,6 +45,7 @@ func (s *Settings) Validate(storage Storage, ipv6Supported bool) (err error) {
 		"log":             s.Log.validate,
 		"public ip check": s.PublicIP.validate,
 		"shadowsocks":     s.Shadowsocks.validate,
+		"socks5":          s.Socks5.validate,
 		"system":          s.System.validate,
 		"updater":         s.Updater.Validate,
 		"version":         s.Version.validate,
@@ -73,6 +75,7 @@ func (s *Settings) copy() (copied Settings) {
 		Log:           s.Log.copy(),
 		PublicIP:      s.PublicIP.copy(),
 		Shadowsocks:   s.Shadowsocks.copy(),
+		Socks5:        s.Socks5.copy(),
 		System:        s.System.copy(),
 		Updater:       s.Updater.copy(),
 		Version:       s.Version.copy(),
@@ -90,6 +93,7 @@ func (s *Settings) MergeWith(other Settings) {
 	s.Log.mergeWith(other.Log)
 	s.PublicIP.mergeWith(other.PublicIP)
 	s.Shadowsocks.mergeWith(other.Shadowsocks)
+	s.Socks5.mergeWith(other.Socks5)
 	s.System.mergeWith(other.System)
 	s.Updater.mergeWith(other.Updater)
 	s.Version.mergeWith(other.Version)
@@ -108,6 +112,7 @@ func (s *Settings) OverrideWith(other Settings,
 	patchedSettings.Log.overrideWith(other.Log)
 	patchedSettings.PublicIP.overrideWith(other.PublicIP)
 	patchedSettings.Shadowsocks.overrideWith(other.Shadowsocks)
+	patchedSettings.Socks5.overrideWith(other.Socks5)
 	patchedSettings.System.overrideWith(other.System)
 	patchedSettings.Updater.overrideWith(other.Updater)
 	patchedSettings.Version.overrideWith(other.Version)
@@ -130,6 +135,7 @@ func (s *Settings) SetDefaults() {
 	s.Log.setDefaults()
 	s.PublicIP.setDefaults()
 	s.Shadowsocks.setDefaults()
+	s.Socks5.setDefaults()
 	s.System.setDefaults()
 	s.Version.setDefaults()
 	s.VPN.setDefaults()
@@ -150,6 +156,7 @@ func (s Settings) toLinesNode() (node *gotree.Node) {
 	node.AppendNode(s.Log.toLinesNode())
 	node.AppendNode(s.Health.toLinesNode())
 	node.AppendNode(s.Shadowsocks.toLinesNode())
+	node.AppendNode(s.Socks5.toLinesNode())
 	node.AppendNode(s.HTTPProxy.toLinesNode())
 	node.AppendNode(s.ControlServer.toLinesNode())
 	node.AppendNode(s.System.toLinesNode())
